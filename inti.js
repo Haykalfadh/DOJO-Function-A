@@ -8,10 +8,23 @@ window.DOJO = (function () {
 
   var D = {};
 
-  // ---------- pengaturan ----------
+  // ---------- pengaturan Firebase & Alat ----------
+  D.GUNA_FIREBASE = true; // Set ke false jika ingin menggunakan polling HTTP lokal
   D.ALAMAT = "http://192.168.4.1/status";
   D.JEDA_POLL = 150;
-  D.BATAS_PUTUS = 1500;
+  D.BATAS_PUTUS = 3000;
+
+  // Konfigurasi Firebase (Ganti nilainya sesuai Firebase Console Anda)
+  D.firebaseConfig = {
+    apiKey: "AIzaSyDp__oskQIEBXcajrCWFHK_NcQb4wwNRYo",
+    authDomain: "dojo-function-a.firebaseapp.com",
+    databaseURL: "https://dojo-function-a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "dojo-function-a",
+    storageBucket: "dojo-function-a.firebasestorage.app",
+    messagingSenderId: "1021819856407",
+    appId: "1:1021819856407:web:60ae2ca92d8b26e9e8de52",
+    measurementId: "G-Y3HCLJRMCD"
+  };
 
   D.TINGGI_MATA = 1.35;
   D.POSISI_MATA = -1.45;
@@ -277,7 +290,53 @@ window.DOJO = (function () {
     setTimeout(function () { el.denyut.classList.remove("pukul"); }, 110);
   }
 
-  function ambilStatus() {
+  function inisialisasiFirebaseListener() {
+    // Jika Firebase SDK dimuat dan D.GUNA_FIREBASE aktif
+    if (D.GUNA_FIREBASE && typeof firebase !== "undefined") {
+      try {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(D.firebaseConfig);
+        }
+        var db = firebase.database();
+        var statusRef = db.ref("connector_status");
+
+        // Mendengarkan perubahan status secara real-time
+        statusRef.on("value", function (snapshot) {
+          var val = snapshot.val();
+          detak();
+
+          if (!alatHidup) {
+            alatHidup = true;
+            tampilkanKabar("ESP32 terhubung via Firebase", false);
+          }
+
+          // Mendukung berbagai format data (boolean, string "TERPASANG"/"LEPAS", atau integer 1/0)
+          var stateTarget = "LEPAS";
+          if (val === true || val === "TERPASANG" || val === 1 || val === "1" || val === "true") {
+            stateTarget = "TERPASANG";
+          }
+
+          D.pasangState(stateTarget);
+          perbaruiPanel();
+        }, function (err) {
+          console.warn("Firebase Database Error:", err);
+          if (alatHidup) {
+            alatHidup = false;
+            tampilkanKabar("Koneksi Firebase terputus", true);
+            perbaruiPanel();
+          }
+        });
+        return;
+      } catch (e) {
+        console.warn("Gagal inisialisasi Firebase, kembali ke polling HTTP lokal:", e);
+      }
+    }
+
+    // Fallback: Polling HTTP lokal jika Firebase tidak digunakan / belum diisi
+    ambilStatusLokal();
+  }
+
+  function ambilStatusLokal() {
     var batal = new AbortController();
     var waktu = setTimeout(function () { batal.abort(); }, 1200);
 
@@ -289,7 +348,7 @@ window.DOJO = (function () {
         detak();
         if (!alatHidup) {
           alatHidup = true;
-          tampilkanKabar("ESP32 tersambung, konektor siap dipakai", false);
+          tampilkanKabar("ESP32 tersambung (Lokal), konektor siap dipakai", false);
         }
         D.pasangState(d.state);
         perbaruiPanel();
@@ -302,7 +361,7 @@ window.DOJO = (function () {
           perbaruiPanel();
         }
       })
-      .finally(function () { setTimeout(ambilStatus, D.JEDA_POLL); });
+      .finally(function () { setTimeout(ambilStatusLokal, D.JEDA_POLL); });
   }
 
   // ---------- tabrakan ----------
@@ -507,7 +566,7 @@ window.DOJO = (function () {
     perbaruiPanel();
     perbaruiBilah();
     requestAnimationFrame(bingkai);
-    ambilStatus();
+    inisialisasiFirebaseListener();
   };
 
   return D;
