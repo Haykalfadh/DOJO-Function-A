@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dojo Function A &mdash; simulasi konektor</title>
+<link rel="stylesheet" href="dojo.css">
+</head>
+<body>
+
+<div id="panggung">
+  <div id="kaca">
+    <canvas id="kanvas"></canvas>
+
+    <div id="panelAlat">
+      <span id="denyut"></span>
+      <div>
+        <div id="alatJudul">ESP32 belum tersambung</div>
+        <div id="alatRinci">Sementara pakai tombol 1 dan 2</div>
+      </div>
+    </div>
+
+    <div id="kabar"></div>
+    <button id="tombolMenu">Kembali ke menu</button>
+
+    <div id="hud">
+      <div class="hudBaris"><span>Pedal rem</span><b id="hudPedal" class="padam">Lepas</b></div>
+      <div class="hudBaris"><span>Lampu rem</span><b id="hudLampu" class="padam">Mati</b></div>
+      <div class="hudBaris"><span>Jarak belakang</span><b id="hudJarak">30 m</b></div>
+    </div>
+
+    <div id="fps"></div>
+
+    <div id="menu" class="selubung tampak">
+      <h1>Customer Experience</h1>
+      <h2>Pilih Simulasi</h2>
+      <p>Pasang dan lepas konektor di depan Anda untuk melihat akibatnya.</p>
+
+      <div id="kartuSim">
+        <button class="kartu" data-sim="wiper">
+          <h2>Wiper saat hujan</h2>
+          <span>Hujan deras di jalan perkotaan. Konektor motor wiper menentukan apakah Anda masih bisa melihat jalan di depan.</span>
+          <em>Pandangan dari kursi pengemudi</em>
+        </button>
+        <button class="kartu" data-sim="stoplamp">
+          <h2>Lampu rem</h2>
+          <span>Anda mengerem di jalan yang ramai. Konektor stop lamp switch menentukan apakah pengemudi di belakang tahu Anda melambat.</span>
+          <em>Pandangan ke arah belakang</em>
+        </button>
+      </div>
+
+      <div id="barisBawah">
+        <div id="menuStatus"><span class="bulat"></span><span id="menuTeks">Alat belum terbaca</span></div>
+        <label id="pilihKualitas">
+          Kualitas gambar
+          <select id="kualitas">
+            <option value="tinggi">Tinggi</option>
+            <option value="sedang" selected>Sedang</option>
+            <option value="rendah">Rendah</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div id="hasil" class="selubung">
+      <h1 id="hasilJudul">Anda mengalami kecelakaan</h1>
+      <p id="hasilSebab"></p>
+      <p class="arahan">Pasang kembali konektor untuk mengulang simulasi.</p>
+      <div id="tombolHasil">
+        <button class="tombol" id="ulang">Ulangi simulasi</button>
+        <button class="tombolSepi" id="keMenu">Pilih simulasi lain</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="bilah">
+    <div id="judul-status">Siap</div>
+    <div id="pesan-status">Pilih simulasi untuk mulai.</div>
+  </div>
+</div>
+
+<script src="inti.js"></script>
+<script src="dunia.js"></script>
+<script src="sim-wiper.js"></script>
+<script src="sim-stoplamp.js"></script>
+<script src="mulai.js"></script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+:root {
+  --bg: #0e1013;
+  --ink: #f3f3f1;
+  --muted: #8b8f96;
+  --aman: #3f9e63;
+  --bahaya: #c63f37;
+  --panel: rgba(14, 16, 19, .86);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+#panggung { height: 100vh; display: flex; flex-direction: column; }
+#kaca { position: relative; flex: 1; background: #000; overflow: hidden; }
+#kanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+/* ---------- indikator alat ---------- */
+#panelAlat {
+  position: absolute; top: 16px; right: 18px; z-index: 7;
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px 11px 13px;
+  border-radius: 8px;
+  background: var(--panel);
+  border-left: 4px solid var(--bahaya);
+}
+#panelAlat.hidup { border-left-color: var(--aman); }
+
+#denyut {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--bahaya); opacity: .45; flex: 0 0 auto;
+  transition: opacity 90ms linear, transform 90ms linear;
+}
+#panelAlat.hidup #denyut { background: var(--aman); }
+#denyut.pukul { opacity: 1; transform: scale(1.55); }
+
+#alatJudul { font-size: 15px; font-weight: 600; line-height: 1.3; }
+#alatRinci { font-size: 13px; color: var(--muted); line-height: 1.35; margin-top: 2px; }
+
+#kabar {
+  position: absolute; top: 78px; right: 18px; z-index: 7;
+  padding: 12px 18px; border-radius: 8px;
+  font-size: 15px; font-weight: 500;
+  background: #1b2a20; color: #a9e0be;
+  border-left: 4px solid var(--aman);
+  opacity: 0; transform: translateY(-6px);
+  transition: opacity 220ms ease, transform 220ms ease;
+  pointer-events: none;
+}
+#kabar.tampak { opacity: 1; transform: translateY(0); }
+#kabar.putus { background: #2a1917; color: #f0b0aa; border-left-color: var(--bahaya); }
+
+/* ---------- tombol menu ---------- */
+#tombolMenu {
+  position: absolute; top: 16px; left: 18px; z-index: 7;
+  display: none;
+  font: inherit; font-size: 15px;
+  color: var(--ink); background: var(--panel);
+  border: 1px solid #2c3138; border-radius: 8px;
+  padding: 11px 20px; cursor: pointer;
+}
+#tombolMenu.tampak { display: block; }
+#tombolMenu:hover { background: rgba(30, 34, 40, .92); }
+
+/* ---------- HUD ---------- */
+#hud {
+  position: absolute; left: 18px; bottom: 18px; z-index: 6;
+  display: none; flex-direction: column; gap: 10px;
+  padding: 14px 20px; border-radius: 8px;
+  background: var(--panel);
+  min-width: 214px;
+}
+#hud.tampak { display: flex; }
+.hudBaris { display: flex; justify-content: space-between; gap: 20px; font-size: 15px; }
+.hudBaris span:first-child { color: var(--muted); }
+.hudBaris b { font-weight: 600; }
+.nyala { color: #ff6a5a; }
+.padam { color: #6f757c; }
+
+#fps {
+  position: absolute; right: 18px; bottom: 18px; z-index: 6;
+  font-size: 12px; color: #575d64;
+  font-variant-numeric: tabular-nums;
+  display: none;
+}
+#fps.tampak { display: block; }
+
+/* ---------- selubung ---------- */
+.selubung {
+  position: absolute; inset: 0; z-index: 8;
+  display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 26px; text-align: center; padding: 40px;
+}
+.selubung.tampak { display: flex; }
+#menu { background: var(--bg); }
+#hasil { background: rgba(10, 6, 6, .90); }
+
+.selubung h1 {
+  font-size: clamp(28px, 3.8vw, 50px);
+  font-weight: 600; margin: 0; letter-spacing: -0.015em;
+}
+#hasil h1 { color: #e8564c; }
+.selubung p {
+  color: var(--muted);
+  font-size: clamp(15px, 1.5vw, 19px);
+  max-width: 52ch; line-height: 1.65; margin: 0;
+}
+#hasil p { color: #ded9d7; }
+#hasil .arahan { color: #a8a29f; font-size: clamp(14px, 1.35vw, 17px); }
+
+#kartuSim { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
+
+.kartu {
+  width: 300px; text-align: left; cursor: pointer;
+  background: #171b20;
+  border: 1px solid #262c33;
+  border-left: 4px solid #3d4650;
+  border-radius: 10px;
+  padding: 24px 24px 26px;
+  color: var(--ink); font: inherit;
+}
+.kartu:hover { background: #1d2229; border-left-color: var(--aman); }
+.kartu:focus-visible { outline: 3px solid #d99413; outline-offset: 3px; }
+.kartu h2 { margin: 0 0 8px; font-size: 21px; font-weight: 600; }
+.kartu span { display: block; color: var(--muted); font-size: 15px; line-height: 1.6; }
+.kartu em { display: block; margin-top: 14px; font-style: normal; font-size: 13px; color: #6f757c; }
+
+#barisBawah { display: flex; gap: 26px; align-items: center; flex-wrap: wrap; justify-content: center; }
+
+#menuStatus {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 10px 18px; border-radius: 999px;
+  font-size: 15px; background: #1c1f24; color: #d8b0ab;
+}
+#menuStatus.hidup { color: #a9e0be; }
+#menuStatus .bulat { width: 9px; height: 9px; border-radius: 50%; background: var(--bahaya); }
+#menuStatus.hidup .bulat { background: var(--aman); }
+
+#pilihKualitas { font-size: 15px; color: var(--muted); display: inline-flex; align-items: center; gap: 10px; }
+#kualitas {
+  font: inherit; font-size: 15px;
+  background: #1c1f24; color: var(--ink);
+  border: 1px solid #2c3138; border-radius: 6px;
+  padding: 8px 12px;
+}
+
+#tombolHasil { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; justify-content: center; }
+
+.tombol {
+  font: inherit; font-size: clamp(16px, 1.7vw, 20px); font-weight: 500;
+  color: #0e1013; background: var(--ink);
+  border: 0; border-radius: 6px;
+  padding: 15px 40px; cursor: pointer;
+}
+.tombolSepi {
+  font: inherit; font-size: 16px; color: var(--muted);
+  background: none; border: 0; cursor: pointer; text-decoration: underline;
+}
+
+/* ---------- bilah status ---------- */
+#bilah {
+  flex: 0 0 auto;
+  padding: 20px 36px;
+  background: #161a1e;
+  border-top: 6px solid var(--muted);
+  display: flex; align-items: baseline; gap: 28px;
+}
+#bilah.aman { border-top-color: var(--aman); }
+#bilah.bahaya { border-top-color: var(--bahaya); }
+#judul-status { font-size: clamp(22px, 2.7vw, 36px); font-weight: 600; white-space: nowrap; }
+#bilah.aman #judul-status { color: var(--aman); }
+#bilah.bahaya #judul-status { color: var(--bahaya); }
+#pesan-status { font-size: clamp(15px, 1.5vw, 19px); line-height: 1.5; }
