@@ -14,8 +14,8 @@
 
 // ==================== KONFIGURASI PENGGUNA ====================
 // 1. Masukkan Wi-Fi Anda (Gunakan jaringan Wi-Fi 2.4 GHz)
-#define WIFI_SSID     "K2-TRAINING"
-#define WIFI_PASSWORD "Tr@ining-K2"
+#define WIFI_SSID     "Rifky"
+#define WIFI_PASSWORD "bismillah"
 
 // 2. Masukkan Kredensial Firebase Anda dari Firebase Console
 // Web API Key dari Project Settings -> General
